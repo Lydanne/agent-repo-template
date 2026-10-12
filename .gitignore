@@ -1,0 +1,9 @@
+projects/
+.runtime/
+.tmp/
+node_modules/
+.env
+.env.*
+*.sqlite*
+*.log
+.DS_Store
