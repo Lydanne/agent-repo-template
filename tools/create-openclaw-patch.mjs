@@ -25,7 +25,7 @@ if (basePath === '--host-config') {
 const policy = JSON.parse(await readFile(resolve(repo, 'tools/agent-worker-policy.json'), 'utf8'));
 const registry = JSON.parse(await readFile(resolve(repo, 'projects.json'), 'utf8'));
 const projectId = settings.projectId;
-if (!registry.projects?.[projectId]) throw Error('Register settings.projectId in projects.json first');
+if (typeof projectId !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(projectId) || !registry.projects || !Object.hasOwn(registry.projects, projectId)) throw Error('Register settings.projectId in projects.json first');
 for (const key of ['cli', 'node', 'codexHome', 'state']) {
   if (typeof settings[key] !== 'string' || !isAbsolute(settings[key])) throw Error('Absolute settings.' + key + ' required');
 }
@@ -37,15 +37,25 @@ for (const key of ['executorInstructions', 'businessDataPolicy', 'asyncInstructi
 }
 const agentId = settings.agentId ?? 'main';
 if (!/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(agentId)) throw Error('Invalid agentId');
-const agents = structuredClone(base.agents?.list ?? []);
-if (!Array.isArray(agents) || agents.filter(agent => agent.id === agentId).length > 1) throw Error('Invalid base agents.list');
-let agent = agents.find(agent => agent.id === agentId);
-if (!agent) { agent = {id: agentId}; agents.push(agent); }
+const useEntries = base.agents?.entries !== undefined && base.agents?.list === undefined;
+let agents, agent;
+if (useEntries) {
+  if (!base.agents.entries || typeof base.agents.entries !== 'object' || Array.isArray(base.agents.entries)) throw Error('Invalid base agents.entries');
+  agents = structuredClone(base.agents.entries);
+  agent = Object.hasOwn(agents, agentId) ? agents[agentId] : {};
+  if (!agent || typeof agent !== 'object' || Array.isArray(agent)) throw Error('Invalid Agent entry');
+  Object.defineProperty(agents, agentId, {value: agent, enumerable: true, configurable: true, writable: true});
+} else {
+  agents = structuredClone(base.agents?.list ?? []);
+  if (!Array.isArray(agents) || agents.filter(item => item.id === agentId).length > 1) throw Error('Invalid base agents.list');
+  agent = agents.find(item => item.id === agentId);
+  if (!agent) { agent = {id: agentId}; agents.push(agent); }
+}
 agent.workspace = repo;
 const tools = ['read', 'memory_search', 'memory_get', 'agent_repo', 'agent_worker'];
 agent.tools = {...agent.tools, ...(agent.tools?.allow ? {allow: [...new Set([...agent.tools.allow, ...tools])]} : {alsoAllow: [...new Set([...(agent.tools?.alsoAllow ?? []), ...tools])]})};
 const patch = {
-  agents: {list: agents},
+  agents: useEntries ? {entries: agents} : {list: agents},
   plugins: {
     ...(base.plugins?.allow ? {allow: [...new Set([...base.plugins.allow, 'feishu-conversation', 'agent-repo', 'agent-worker'])]} : {}),
     entries: {

@@ -77,7 +77,7 @@ openclaw config patch --file /private/plugin.patch.json
 openclaw config validate
 ```
 
---host-config 通过当前 OpenClaw 的 config get --json 导出 agents/plugins/tools/bindings，支持宿主原始 JSON5；生成器不修改配置。离线操作可用标准 JSON 文件路径代替 --host-config。必须指向目标宿主环境，已有配置不能省略输入，否则数组中的其他 Agent 和白名单可能丢失。
+--host-config 通过当前 OpenClaw 的 config get --json 导出 agents/plugins/tools/bindings，支持宿主原始 JSON5，保留旧 agents.list 或新 agents.entries 配置格式；生成器不修改配置。离线操作可用标准 JSON 文件路径代替 --host-config。必须指向目标宿主环境，已有配置不能省略输入，否则数组中的其他 Agent 和白名单可能丢失。
 
 生成器配置 Agent workspace 与 agent-repo binding 为同一角色根，保持 sync.enabled=false、开启会话钩子，显式加入工具权限；Worker 使用 agent-repo 项目路由、只读沙箱、指定机器路径与模型，并读取四项模板政策。政策不会被插件自动从文件重读，修改后须重新生成并应用。已有工具 deny/profile、Agent 与通道策略仍须核对，deny 优先于 allow；不得全局开放不需要的工具。非 main Agent 会增加 default 飞书账号 binding，已有相同 binding 时先合并去重。
 

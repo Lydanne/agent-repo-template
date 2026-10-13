@@ -35,4 +35,11 @@ test('fresh and existing configurations preserve Agent settings and render porta
   const fresh = JSON.parse(execFileSync(process.execPath, [join(repo, 'tools/create-openclaw-patch.mjs'), settingsPath], {encoding: 'utf8'}));
   assert.equal(fresh.plugins.allow, undefined);
   assert.equal(fresh.agents.list.length, 1);
+  await writeFile(basePath, JSON.stringify({agents: {entries: {main: {model: 'keep', tools: {deny: ['exec']}}, other: {workspace: '/other'}}}}));
+  const canonical = JSON.parse(execFileSync(process.execPath, [join(repo, 'tools/create-openclaw-patch.mjs'), settingsPath, basePath], {encoding: 'utf8'}));
+  assert.equal(canonical.agents.entries.main.model, 'keep');
+  assert.deepEqual(canonical.agents.entries.main.tools.deny, ['exec']);
+  assert.deepEqual(canonical.agents.entries.other, {workspace: '/other'});
+  assert.equal(canonical.agents.list, undefined);
+
 });
