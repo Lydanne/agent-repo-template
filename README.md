@@ -8,7 +8,7 @@
 2. 克隆新仓库，明确读取 [BOOTSTRAP.md](BOOTSTRAP.md)，填写身份、职责与授权边界。OpenClaw 不保证克隆后自动完成初始化。
 3. 编辑 projects.json，登记实际项目；克隆项目到 projects/<项目ID>。角色仓库只忽略目录，不自动克隆或初始化项目。
 4. 提交角色、规则和登记文件。技能及规范必须已提交，才能参与运行时快照校验。
-5. 安装插件并生成配置计划，审查后在授权维护窗口接入 OpenClaw；详细步骤见 [接入与恢复](docs/openclaw.md)。
+5. 安装插件并用模板工具生成完整配置补丁，审查后在授权维护窗口接入 OpenClaw；详细步骤见 [接入与恢复](docs/openclaw.md)。
 
 只想参考文件时可以 clone 此模板；用于实际角色时应创建独立仓库，并让 origin 指向自己的角色仓库。同步默认要求 main/origin，不要把日常记忆自动推送到公共模板。
 
@@ -21,7 +21,8 @@
 | BOOTSTRAP.md | 创建新角色时的管理员初始化清单 |
 | projects.json | schemaVersion=1 的项目登记；默认空登记 |
 | skills/ | 此角色专用技能；不复制所有业务项目技能 |
-| tools/agent-worker-policy.json | 完整迁移计划读取的角色政策；不含机器路径 |
+| tools/agent-worker-policy.json | 首次接入补丁与迁移计划读取的角色政策；不含机器路径 |
+| tools/create-openclaw-patch.mjs | 从私有机器参数与四项政策生成配置补丁 |
 | MEMORY.md / memory/YYYY-MM-DD.md | 经核验且允许在共享范围保存的经验 |
 | projects/<项目ID>/ | 被 Git 忽略的独立业务仓库 |
 | docs/ | 项目登记、接入、恢复和记忆管理说明 |
@@ -41,7 +42,7 @@
       "url": "https://github.com/OWNER/PROJECT.git",
       "branch": "main",
       "repository": "projects/demo",
-      "skills": ["projects/demo/.agents/skills"]
+      "skills": []
     }
   }
 }

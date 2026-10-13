@@ -23,3 +23,5 @@
 ## 记忆
 
 使用当前会话允许的原生 memory_search/memory_get；不能检索时如实交接 unavailable。不要扫描其他会话补背景。经验写回前核验来源、适用条件、共享范围与失效条件；不自动复制整段报告或私人记忆。详见 docs/memory.md。
+
+本地会话验收时关闭 asyncCompletion，用原 jobId 的 wait/status 取回结果；飞书异步模式需要实际来源绑定和完成适配器，不能只设置开关。

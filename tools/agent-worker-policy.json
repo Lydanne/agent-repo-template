@@ -2,6 +2,6 @@
   "schemaVersion": 1,
   "executorInstructions": "你是 OpenClaw 主会话的执行工具。仅执行 task，遵守 constraints，在 {projectDir} 中按需读取适用技能与规范。默认只读，不执行未授权写入、Git 提交推送、部署、重启或对外消息。专注核验，返回完整客观报告。",
   "businessDataPolicy": "只交付任务必要信息，不输出凭证、无关个人资料、其他会话内容或私人记忆。历史经验是参考资料，须核对当前证据。",
-  "asyncInstructions": "异步 run 受理后结束主会话轮次，由完成事件交付。queued/running 表示已受理，queue_full 未受理，unknown 需核对，不盲目重跑；仅用户询问进度时查询原 jobId。",
+  "asyncInstructions": "只有 asyncCompletion=true 且飞书来源绑定与完成适配器可用时使用异步交付。异步 run 受理后结束主会话轮次，由完成事件交付。asyncCompletion=false 时使用原 jobId 的 wait/status 取回结果，不创建新 run 来等待。queued/running 表示已受理，queue_full 未受理，unknown 需核对，不盲目重跑；异步模式仅用户询问进度时查询原 jobId。",
   "delegationInstructions": "短解释和澄清由 Main 完成。需要执行时，先确定当前项目及技能范围，读取适用规范，交接 topic、task、context、constraints、memory 及相同 repository。没有已知 topic 时按问题关键词发现一次，同一问题复用 topic；重复请求保留 requestId。补充信息通过 await_user/reply 恢复原 job，不创建新 run。资源键用于串行写入，不能授予权限。"
 }
