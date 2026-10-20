@@ -1,6 +1,6 @@
 # Agent Repo Template
 
-用于 OpenClaw 的通用角色仓库模板，配合 [agent-repo 插件](https://github.com/Lydanne/openclaw-plugins/tree/main/packages/agent-repo) 与 [agent-worker 插件](https://github.com/Lydanne/openclaw-plugins/tree/main/packages/agent-worker) 使用。角色、技能、项目登记和可共享经验由此仓库维护；业务代码在独立 Project Repo 中维护。
+用于 OpenClaw 的通用角色仓库模板，配合 [agent-repo 插件](https://github.com/Lydanne/agent-plugins/tree/main/packages/agent-repo) 与 [agent-worker 插件](https://github.com/Lydanne/agent-plugins/tree/main/packages/agent-worker) 使用。角色、技能、项目登记和可共享经验由此仓库维护；业务代码在独立 Project Repo 中维护。
 
 ## 创建自己的 Agent
 
@@ -22,7 +22,7 @@
 | projects.json | schemaVersion=1 的项目登记；默认空登记 |
 | skills/ | 此角色专用技能；不复制所有业务项目技能 |
 | tools/agent-worker-policy.json | 首次接入补丁与迁移计划读取的角色政策；不含机器路径 |
-| tools/create-openclaw-patch.mjs | 从私有机器参数与四项政策生成配置补丁 |
+| tools/create-openclaw-patch.mjs | 从私有机器参数、可选 Git 环境与四项政策生成配置补丁 |
 | MEMORY.md / memory/YYYY-MM-DD.md | 经核验且允许在共享范围保存的经验 |
 | projects/<项目ID>/ | 被 Git 忽略的独立业务仓库 |
 | docs/ | 项目登记、接入、恢复和记忆管理说明 |
@@ -48,4 +48,4 @@
 }
 ```
 
-见 [项目与技能范围](docs/projects.md)、[记忆管理](docs/memory.md) 和 [插件安装组合指南](https://github.com/Lydanne/openclaw-plugins/blob/main/docs/openclaw-setup.md)。模板默认空登记可被插件解析，但没有可执行项目；它不会替你申请业务权限或应用生产配置。
+见 [项目与技能范围](docs/projects.md)、[记忆管理](docs/memory.md) 和 [插件安装组合指南](https://github.com/Lydanne/agent-plugins/blob/main/docs/openclaw-setup.md)。模板默认空登记可被插件解析，但没有可执行项目；它不会替你申请业务权限或应用生产配置。

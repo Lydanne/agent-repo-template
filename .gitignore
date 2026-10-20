@@ -7,3 +7,11 @@ node_modules/
 *.sqlite*
 *.log
 .DS_Store
+
+# Private deployment state and credentials
+.openclaw/
+*.db
+*.pem
+*.key
+auth.json
+credentials.json

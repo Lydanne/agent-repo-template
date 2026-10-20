@@ -30,6 +30,12 @@ for (const key of ['cli', 'node', 'codexHome', 'state']) {
   if (typeof settings[key] !== 'string' || !isAbsolute(settings[key])) throw Error('Absolute settings.' + key + ' required');
 }
 if (typeof settings.model !== 'string' || !settings.model.trim()) throw Error('Set an available Codex model in settings.model');
+const gitEnvironment = settings.gitEnvironment;
+if (gitEnvironment !== undefined && (
+  gitEnvironment === null || typeof gitEnvironment !== 'object' || Array.isArray(gitEnvironment) ||
+  Object.keys(gitEnvironment).length > 100 ||
+  Object.entries(gitEnvironment).some(([key, value]) => !/^[A-Za-z_][A-Za-z0-9_]*$/.test(key) || /[\0\r\n]/.test(key) || typeof value !== 'string' || [...value].length > 40000 || value.includes('\0'))
+)) throw Error('Invalid settings.gitEnvironment');
 const policies = {};
 for (const key of ['executorInstructions', 'businessDataPolicy', 'asyncInstructions', 'delegationInstructions']) {
   if (typeof policy[key] !== 'string' || !policy[key].trim()) throw Error('Missing policy.' + key);
@@ -61,7 +67,7 @@ const patch = {
     entries: {
       feishu: {enabled: false},
       'feishu-conversation': {enabled: true, hooks: {allowConversationAccess: true}},
-      'agent-repo': {enabled: true, hooks: {allowConversationAccess: true}, config: {agents: {[agentId]: {repo, sync: {enabled: false}}}}},
+      'agent-repo': {enabled: true, hooks: {allowConversationAccess: true}, config: {agents: {[agentId]: {repo, sync: {enabled: false, ...(gitEnvironment !== undefined ? {gitEnvironment: {...gitEnvironment}} : {})}}}}},
       'agent-worker': {enabled: true, config: {
         cwd: resolve(repo, 'projects', projectId), projectRouting: 'agent-repo',
         cli: settings.cli, node: settings.node, codexHome: settings.codexHome, state: settings.state,
